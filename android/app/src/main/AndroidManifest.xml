@@ -59,8 +59,6 @@
 
     <!-- Required to post notifications on Android 13 (API 33) and above -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Required for alarmClock schedule mode (AndroidScheduleMode.alarmClock) -->
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <!-- Required to reschedule notifications after device reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 </manifest>

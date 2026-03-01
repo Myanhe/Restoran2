@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
@@ -12,15 +11,17 @@ class NotificationHelper {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  /// Initialises the plugin and timezone data.
+  /// Does NOT request runtime permissions — call [requestPermissions] from UI.
   Future<void> initNotifications() async {
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings iOSInitializationSettings =
         DarwinInitializationSettings(
-          requestSoundPermission: false,
-          requestBadgePermission: false,
-          requestAlertPermission: false,
+          requestSoundPermission: true,
+          requestBadgePermission: true,
+          requestAlertPermission: true,
         );
 
     const InitializationSettings initializationSettings =
@@ -38,70 +39,61 @@ class NotificationHelper {
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {},
     );
+  }
 
-    // Request POST_NOTIFICATIONS permission at runtime (required for Android 13 / API 33+)
-    if (!kIsWeb) {
-      final androidPlugin = flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-      if (androidPlugin != null) {
-        await androidPlugin.requestNotificationsPermission();
-        await androidPlugin.requestExactAlarmsPermission();
-      }
+  /// Requests POST_NOTIFICATIONS permission (Android 13 / API 33+).
+  /// Must be called while an Activity is visible (i.e. after runApp).
+  Future<void> requestPermissions() async {
+    final androidPlugin = flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    if (androidPlugin != null) {
+      await androidPlugin.requestNotificationsPermission();
     }
   }
 
   Future<void> scheduleDailyAt11() async {
-    try {
-      final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-      tz.TZDateTime scheduledDate = tz.TZDateTime(
-        tz.local,
-        now.year,
-        now.month,
-        now.day,
-        11,
-        0,
-      );
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      11,
+      0,
+    );
 
-      if (scheduledDate.isBefore(now)) {
-        scheduledDate = scheduledDate.add(const Duration(days: 1));
-      }
-
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'Lunch Reminder',
-        'Waktunya makan siang! Cek rekomendasi restoran.',
-        scheduledDate,
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'daily_reminder_channel',
-            'Daily Reminder',
-            channelDescription: 'Daily lunch reminder at 11 AM',
-            importance: Importance.defaultImportance,
-            priority: Priority.defaultPriority,
-          ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        androidScheduleMode: AndroidScheduleMode.alarmClock,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
-    } catch (e) {
-      // Error handling silently - notification scheduling issue
-      // Errors can occur due to timezone or platform-specific issues
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'Lunch Reminder',
+      'Waktunya makan siang! Cek rekomendasi restoran.',
+      scheduledDate,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminder_channel',
+          'Daily Reminder',
+          channelDescription: 'Daily lunch reminder at 11 AM',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
   Future<void> cancelDaily() async {
-    try {
-      await flutterLocalNotificationsPlugin.cancel(0);
-    } catch (e) {
-      // Error handling silently - notification cancellation issue
-    }
+    await flutterLocalNotificationsPlugin.cancel(0);
   }
 }
