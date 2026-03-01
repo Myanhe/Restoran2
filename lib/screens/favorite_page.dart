@@ -73,8 +73,10 @@ class _FavoritePageState extends State<FavoritePage> {
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      Provider.of<RestaurantProvider>(context, listen: false)
-                          .getRestaurantImageUrl(r.pictureId),
+                      Provider.of<RestaurantProvider>(
+                        context,
+                        listen: false,
+                      ).getRestaurantImageUrl(r.pictureId),
                       width: 64,
                       height: 64,
                       fit: BoxFit.cover,

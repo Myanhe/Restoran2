@@ -31,7 +31,10 @@ class RestaurantCard extends StatelessWidget {
                   topRight: Radius.circular(12),
                 ),
                 child: Image.network(
-                  provider.getRestaurantImageUrl(restaurant.pictureId, size: 'small'),
+                  provider.getRestaurantImageUrl(
+                    restaurant.pictureId,
+                    size: 'small',
+                  ),
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -74,11 +77,7 @@ class RestaurantCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(
-                        Icons.star,
-                        size: 16,
-                        color: Colors.amber,
-                      ),
+                      const Icon(Icons.star, size: 16, color: Colors.amber),
                       const SizedBox(width: 4),
                       Text(
                         restaurant.rating.toStringAsFixed(1),

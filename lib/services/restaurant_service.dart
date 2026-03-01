@@ -10,9 +10,9 @@ class RestaurantService {
 
   Future<RestaurantListResponse> getAllRestaurants() async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/list'),
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse('$baseUrl/list'))
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         return RestaurantListResponse.fromJson(
@@ -28,9 +28,9 @@ class RestaurantService {
 
   Future<RestaurantDetailResponse> getRestaurantDetail(String id) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/detail/$id'),
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse('$baseUrl/detail/$id'))
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         return RestaurantDetailResponse.fromJson(
@@ -46,9 +46,9 @@ class RestaurantService {
 
   Future<RestaurantListResponse> searchRestaurants(String query) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/search?q=$query'),
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse('$baseUrl/search?q=$query'))
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         return RestaurantListResponse.fromJson(
@@ -68,15 +68,17 @@ class RestaurantService {
     required String review,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/review'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'id': restaurantId,
-          'name': name,
-          'review': review,
-        }),
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/review'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'id': restaurantId,
+              'name': name,
+              'review': review,
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 201) {
         throw Exception('Failed to add review');

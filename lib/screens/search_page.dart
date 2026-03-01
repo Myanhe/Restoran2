@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/restaurant_provider.dart';
 import '../providers/api_result.dart';
 import '../widgets/restaurant_card.dart';
+import '../utils/error_formatter.dart';
 import 'detail_page.dart';
 
 class SearchPage extends StatefulWidget {
@@ -30,9 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Restaurants'),
-      ),
+      appBar: AppBar(title: const Text('Search Restaurants')),
       body: Column(
         children: [
           Padding(
@@ -64,9 +63,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       );
                     }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return const Center(child: CircularProgressIndicator());
                   },
                   success: (response) {
                     if (response.restaurants.isEmpty) {
@@ -99,9 +96,8 @@ class _SearchPageState extends State<SearchPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DetailPage(
-                                  restaurantId: restaurant.id,
-                                ),
+                                builder: (context) =>
+                                    DetailPage(restaurantId: restaurant.id),
                               ),
                             );
                           },
@@ -120,14 +116,14 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Error searching restaurants',
+                          'Gagal Mencari Restoran',
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         const SizedBox(height: 8),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32),
                           child: Text(
-                            message,
+                            getUserFriendlyErrorMessage(message),
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),

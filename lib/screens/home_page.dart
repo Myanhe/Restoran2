@@ -4,6 +4,7 @@ import '../providers/restaurant_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/api_result.dart';
 import '../widgets/restaurant_card.dart';
+import '../utils/error_formatter.dart';
 import 'search_page.dart';
 import 'detail_page.dart';
 
@@ -63,9 +64,7 @@ class _HomePageState extends State<HomePage> {
       body: Consumer<RestaurantProvider>(
         builder: (context, provider, child) {
           return provider.restaurantListResult.maybeWhen(
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             success: (response) {
               if (response.restaurants.isEmpty) {
                 return Center(
@@ -99,9 +98,8 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                              restaurantId: restaurant.id,
-                            ),
+                            builder: (context) =>
+                                DetailPage(restaurantId: restaurant.id),
                           ),
                         );
                       },
@@ -115,21 +113,17 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.red[400],
-                    ),
+                    Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                     const SizedBox(height: 16),
                     Text(
-                      'Error loading restaurants',
+                      'Gagal Memuat Restoran',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
-                        message,
+                        getUserFriendlyErrorMessage(message),
                         style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),

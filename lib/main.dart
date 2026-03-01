@@ -24,11 +24,13 @@ Future<void> main() async {
 
   await NotificationHelper().initNotifications();
 
-  runApp(MyApp(
-    themeProvider: themeProvider,
-    settingsProvider: settingsProvider,
-    favoriteProvider: favoriteProvider,
-  ));
+  runApp(
+    MyApp(
+      themeProvider: themeProvider,
+      settingsProvider: settingsProvider,
+      favoriteProvider: favoriteProvider,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -36,16 +38,27 @@ class MyApp extends StatelessWidget {
   final SettingsProvider settingsProvider;
   final FavoriteProvider favoriteProvider;
 
-  const MyApp({super.key, required this.themeProvider, required this.settingsProvider, required this.favoriteProvider});
+  const MyApp({
+    super.key,
+    required this.themeProvider,
+    required this.settingsProvider,
+    required this.favoriteProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<RestaurantProvider>(create: (_) => RestaurantProvider()),
+        ChangeNotifierProvider<RestaurantProvider>(
+          create: (_) => RestaurantProvider(),
+        ),
         ChangeNotifierProvider<ThemeProvider>(create: (_) => themeProvider),
-        ChangeNotifierProvider<SettingsProvider>(create: (_) => settingsProvider),
-        ChangeNotifierProvider<FavoriteProvider>(create: (_) => favoriteProvider),
+        ChangeNotifierProvider<SettingsProvider>(
+          create: (_) => settingsProvider,
+        ),
+        ChangeNotifierProvider<FavoriteProvider>(
+          create: (_) => favoriteProvider,
+        ),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
@@ -54,7 +67,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: themeProvider.isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
             routes: {
               '/settings': (_) => const SettingsPage(),
               '/favorites': (_) => const FavoritePage(),

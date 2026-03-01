@@ -25,7 +25,7 @@ class MockRestaurantService implements RestaurantService {
     if (_shouldThrow) {
       throw _exception ?? Exception('Unexpected error');
     }
-    
+
     return RestaurantListResponse(
       error: false,
       message: 'Success',
@@ -75,38 +75,41 @@ void main() {
         expect(provider.restaurantListResult, isA<ApiLoading>());
       });
 
-      test('Should return ApiSuccess when getAllRestaurants succeeds', () async {
-        // Arrange
-        final mockRestaurants = [
-          Restaurant(
-            id: '1',
-            name: 'Mie Ayam Pak Kumis',
-            description: 'Mie ayam terbaik di kota',
-            pictureId: 'pic1',
-            city: 'Solo',
-            rating: 4.5,
-          ),
-          Restaurant(
-            id: '2',
-            name: 'Soto Ayam Mak Ning',
-            description: 'Soto ayam gurih dan nikmat',
-            pictureId: 'pic2',
-            city: 'Jakarta',
-            rating: 4.0,
-          ),
-        ];
-        mockRestaurantService.setMockRestaurants(mockRestaurants);
+      test(
+        'Should return ApiSuccess when getAllRestaurants succeeds',
+        () async {
+          // Arrange
+          final mockRestaurants = [
+            Restaurant(
+              id: '1',
+              name: 'Mie Ayam Pak Kumis',
+              description: 'Mie ayam terbaik di kota',
+              pictureId: 'pic1',
+              city: 'Solo',
+              rating: 4.5,
+            ),
+            Restaurant(
+              id: '2',
+              name: 'Soto Ayam Mak Ning',
+              description: 'Soto ayam gurih dan nikmat',
+              pictureId: 'pic2',
+              city: 'Jakarta',
+              rating: 4.0,
+            ),
+          ];
+          mockRestaurantService.setMockRestaurants(mockRestaurants);
 
-        // Act
-        await provider.getAllRestaurants();
+          // Act
+          await provider.getAllRestaurants();
 
-        // Assert
-        expect(provider.restaurantListResult, isA<ApiSuccess>());
-        final result = provider.restaurantListResult as ApiSuccess;
-        expect(result.data.restaurants.length, equals(2));
-        expect(result.data.restaurants[0].name, equals('Mie Ayam Pak Kumis'));
-        expect(result.data.restaurants[1].city, equals('Jakarta'));
-      });
+          // Assert
+          expect(provider.restaurantListResult, isA<ApiSuccess>());
+          final result = provider.restaurantListResult as ApiSuccess;
+          expect(result.data.restaurants.length, equals(2));
+          expect(result.data.restaurants[0].name, equals('Mie Ayam Pak Kumis'));
+          expect(result.data.restaurants[1].city, equals('Jakarta'));
+        },
+      );
 
       test('Should return ApiError when getAllRestaurants fails', () async {
         // Arrange

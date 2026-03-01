@@ -94,9 +94,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFFF5F5F5),
-      hintStyle: GoogleFonts.poppins(
-        color: const Color(0xFF9E9E9E),
-      ),
+      hintStyle: GoogleFonts.poppins(color: const Color(0xFF9E9E9E)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
@@ -204,9 +202,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFF2C2C2C),
-      hintStyle: GoogleFonts.poppins(
-        color: const Color(0xFF757575),
-      ),
+      hintStyle: GoogleFonts.poppins(color: const Color(0xFF757575)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: Color(0xFF424242)),
