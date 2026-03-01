@@ -11,34 +11,69 @@ class NotificationHelper {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<void> initNotifications() async {
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iOS = DarwinInitializationSettings();
-    const settings = InitializationSettings(android: android, iOS: iOS);
+    const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    
+    const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings,
+      iOS: iOSInitializationSettings,
+    );
+
     tzdata.initializeTimeZones();
-    await flutterLocalNotificationsPlugin.initialize(settings);
-  }
-
-  Future<void> scheduleDailyAt11() async {
-    final time = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(tz.local, time.year, time.month, time.day, 11, 0);
-    if (scheduled.isBefore(time)) scheduled = scheduled.add(const Duration(days: 1));
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Lunch Reminder',
-      'Waktunya makan siang! Cek rekomendasi restoran.',
-      scheduled,
-      const NotificationDetails(
-        android: AndroidNotificationDetails('daily_reminder', 'Daily Reminder', importance: Importance.defaultImportance),
-        iOS: DarwinNotificationDetails(),
-      ),
-      androidScheduleMode: AndroidScheduleMode.alarmClock,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
+    
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {},
     );
   }
 
+  Future<void> scheduleDailyAt11() async {
+    try {
+      final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+      tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, 11, 0);
+      
+      if (scheduledDate.isBefore(now)) {
+        scheduledDate = scheduledDate.add(const Duration(days: 1));
+      }
+
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Lunch Reminder',
+        'Waktunya makan siang! Cek rekomendasi restoran.',
+        scheduledDate,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'daily_reminder_channel',
+            'Daily Reminder',
+            channelDescription: 'Daily lunch reminder at 11 AM',
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (e) {
+      print('Error scheduling notification: $e');
+    }
+  }
+
   Future<void> cancelDaily() async {
-    await flutterLocalNotificationsPlugin.cancel(0);
+    try {
+      await flutterLocalNotificationsPlugin.cancel(0);
+    } catch (e) {
+      print('Error canceling notification: $e');
+    }
   }
 }

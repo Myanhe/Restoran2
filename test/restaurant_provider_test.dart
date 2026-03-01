@@ -5,65 +5,123 @@ import 'package:restaurant_app/services/restaurant_service.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/providers/api_result.dart';
 
-class MockRestaurantService extends Mock implements RestaurantService {}
+// Simple mock implementation for testing
+class MockRestaurantService implements RestaurantService {
+  List<Restaurant>? _mockRestaurants;
+  Exception? _exception;
+  bool _shouldThrow = false;
+
+  void setMockRestaurants(List<Restaurant> restaurants) {
+    _mockRestaurants = restaurants;
+    _shouldThrow = false;
+  }
+
+  void setException(Exception exception) {
+    _exception = exception;
+    _shouldThrow = true;
+  }
+
+  @override
+  Future<RestaurantListResponse> getAllRestaurants() async {
+    if (_shouldThrow) {
+      throw _exception ?? Exception('Unexpected error');
+    }
+    
+    return RestaurantListResponse(
+      error: false,
+      message: 'Success',
+      count: _mockRestaurants?.length ?? 0,
+      restaurants: _mockRestaurants ?? [],
+    );
+  }
+
+  @override
+  Future<RestaurantDetailResponse> getRestaurantDetail(String id) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<RestaurantListResponse> searchRestaurants(String query) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addReview({
+    required String restaurantId,
+    required String name,
+    required String review,
+  }) async {
+    // Mock implementation - do nothing
+  }
+
+  @override
+  String getRestaurantImageUrl(String pictureId, {String size = 'medium'}) {
+    return 'https://restaurant-api.dicoding.dev/images/$size/$pictureId';
+  }
+}
 
 void main() {
-  group('RestaurantProvider', () {
+  group('RestaurantProvider Tests', () {
     late RestaurantProvider provider;
-    late MockRestaurantService mockService;
+    late MockRestaurantService mockRestaurantService;
 
     setUp(() {
-      mockService = MockRestaurantService();
-      provider = RestaurantProvider(service: mockService);
+      mockRestaurantService = MockRestaurantService();
+      provider = RestaurantProvider(service: mockRestaurantService);
     });
 
-    test('Initial state should be ApiLoading', () {
-      expect(provider.restaurantListResult, isA<ApiLoading>());
-    });
+    group('getAllRestaurants', () {
+      test('Initial state should be ApiLoading', () {
+        // Assert
+        expect(provider.restaurantListResult, isA<ApiLoading>());
+      });
 
-    test('Should return restaurant list when API call succeeds', () async {
-      final mockResponse = RestaurantListResponse(
-        error: false,
-        message: 'Success',
-        count: 2,
-        restaurants: [
+      test('Should return ApiSuccess when getAllRestaurants succeeds', () async {
+        // Arrange
+        final mockRestaurants = [
           Restaurant(
             id: '1',
-            name: 'Restaurant 1',
-            description: 'Desc 1',
+            name: 'Mie Ayam Pak Kumis',
+            description: 'Mie ayam terbaik di kota',
             pictureId: 'pic1',
-            city: 'City 1',
+            city: 'Solo',
             rating: 4.5,
           ),
           Restaurant(
             id: '2',
-            name: 'Restaurant 2',
-            description: 'Desc 2',
+            name: 'Soto Ayam Mak Ning',
+            description: 'Soto ayam gurih dan nikmat',
             pictureId: 'pic2',
-            city: 'City 2',
+            city: 'Jakarta',
             rating: 4.0,
           ),
-        ],
-      );
+        ];
+        mockRestaurantService.setMockRestaurants(mockRestaurants);
 
-      when(mockService.getAllRestaurants()).thenAnswer((_) async => mockResponse);
+        // Act
+        await provider.getAllRestaurants();
 
-      await provider.getAllRestaurants();
+        // Assert
+        expect(provider.restaurantListResult, isA<ApiSuccess>());
+        final result = provider.restaurantListResult as ApiSuccess;
+        expect(result.data.restaurants.length, equals(2));
+        expect(result.data.restaurants[0].name, equals('Mie Ayam Pak Kumis'));
+        expect(result.data.restaurants[1].city, equals('Jakarta'));
+      });
 
-      expect(provider.restaurantListResult, isA<ApiSuccess>());
-      final result = provider.restaurantListResult as ApiSuccess;
-      expect(result.data.restaurants.length, 2);
-      expect(result.data.restaurants[0].name, 'Restaurant 1');
-    });
+      test('Should return ApiError when getAllRestaurants fails', () async {
+        // Arrange
+        final errorMessage = 'Connection timeout';
+        mockRestaurantService.setException(Exception(errorMessage));
 
-    test('Should return error when API call fails', () async {
-      when(mockService.getAllRestaurants()).thenThrow(Exception('Network error'));
+        // Act
+        await provider.getAllRestaurants();
 
-      await provider.getAllRestaurants();
-
-      expect(provider.restaurantListResult, isA<ApiError>());
-      final result = provider.restaurantListResult as ApiError;
-      expect(result.message, contains('Network error'));
+        // Assert
+        expect(provider.restaurantListResult, isA<ApiError>());
+        final result = provider.restaurantListResult as ApiError;
+        expect(result.message, contains(errorMessage));
+      });
     });
   });
 }
