@@ -52,6 +52,8 @@ class NotificationHelper {
     }
   }
 
+  /// Schedule a daily notification at 11:00 AM (Asia/Jakarta).
+  /// Throws if scheduling fails so the caller can surface the error.
   Future<void> scheduleDailyAt11() async {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(
@@ -63,6 +65,7 @@ class NotificationHelper {
       0,
     );
 
+    // If 11 AM has already passed today, schedule for tomorrow
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -86,7 +89,9 @@ class NotificationHelper {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      // alarmClock mode uses AlarmManager.setAlarmClock() — most reliable,
+      // fires even during Doze. Requires USE_EXACT_ALARM in AndroidManifest.xml.
+      androidScheduleMode: AndroidScheduleMode.alarmClock,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
