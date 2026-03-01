@@ -1,7 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
-import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotificationHelper {
   static final NotificationHelper _instance = NotificationHelper._internal();
@@ -32,8 +31,7 @@ class NotificationHelper {
     tzdata.initializeTimeZones();
 
     // Set local timezone to Asia/Jakarta (WIB - Western Indonesia Time)
-    final tzInfo = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(tzInfo.toString()));
+    tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
