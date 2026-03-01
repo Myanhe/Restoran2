@@ -65,7 +65,8 @@ class NotificationHelper {
         matchDateTimeComponents: DateTimeComponents.time,
       );
     } catch (e) {
-      print('Error scheduling notification: $e');
+      // Error handling silently - notification scheduling issue
+      // Errors can occur due to timezone or platform-specific issues
     }
   }
 
@@ -73,7 +74,7 @@ class NotificationHelper {
     try {
       await flutterLocalNotificationsPlugin.cancel(0);
     } catch (e) {
-      print('Error canceling notification: $e');
+      // Error handling silently - notification cancellation issue
     }
   }
 }
