@@ -110,7 +110,7 @@ void main() {
 
       test('Should return ApiError when getAllRestaurants fails', () async {
         // Arrange
-        final errorMessage = 'Connection timeout';
+        const errorMessage = 'Connection timeout';
         mockRestaurantService.setException(Exception(errorMessage));
 
         // Act
