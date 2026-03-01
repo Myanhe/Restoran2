@@ -5,14 +5,12 @@ import '../providers/favorite_provider.dart';
 import '../providers/api_result.dart';
 import '../models/restaurant.dart';
 import '../widgets/menu_item_card.dart';
+import '../utils/error_formatter.dart';
 
 class DetailPage extends StatefulWidget {
   final String restaurantId;
 
-  const DetailPage({
-    super.key,
-    required this.restaurantId,
-  });
+  const DetailPage({super.key, required this.restaurantId});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -28,7 +26,9 @@ class _DetailPageState extends State<DetailPage> {
     _nameController = TextEditingController();
     _reviewController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<RestaurantProvider>().getRestaurantDetail(widget.restaurantId);
+      context.read<RestaurantProvider>().getRestaurantDetail(
+        widget.restaurantId,
+      );
     });
   }
 
@@ -120,23 +120,26 @@ class _DetailPageState extends State<DetailPage> {
                       if (isFav) {
                         fav.removeFavorite(widget.restaurantId);
                       } else {
-                        context.read<RestaurantProvider>().restaurantDetailResult.maybeWhen(
-                          success: (detail) {
-                            final rest = detail.restaurant;
-                            final restaurant = Restaurant(
-                              id: rest.id,
-                              name: rest.name,
-                              description: rest.description,
-                              pictureId: rest.pictureId,
-                              city: rest.city,
-                              rating: rest.rating,
+                        context
+                            .read<RestaurantProvider>()
+                            .restaurantDetailResult
+                            .maybeWhen(
+                              success: (detail) {
+                                final rest = detail.restaurant;
+                                final restaurant = Restaurant(
+                                  id: rest.id,
+                                  name: rest.name,
+                                  description: rest.description,
+                                  pictureId: rest.pictureId,
+                                  city: rest.city,
+                                  rating: rest.rating,
+                                );
+                                fav.addFavorite(restaurant);
+                              },
+                              loading: () {},
+                              error: (_) {},
+                              orElse: () {},
                             );
-                            fav.addFavorite(restaurant);
-                          },
-                          loading: () {},
-                          error: (_) {},
-                          orElse: () {},
-                        );
                       }
                     },
                   );
@@ -149,9 +152,7 @@ class _DetailPageState extends State<DetailPage> {
       body: Consumer<RestaurantProvider>(
         builder: (context, provider, child) {
           return provider.restaurantDetailResult.maybeWhen(
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
             success: (response) {
               final restaurant = response.restaurant;
               return SingleChildScrollView(
@@ -188,7 +189,9 @@ class _DetailPageState extends State<DetailPage> {
                               Expanded(
                                 child: Text(
                                   restaurant.name,
-                                  style: Theme.of(context).textTheme.headlineLarge,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineLarge,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -202,7 +205,9 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                   Text(
                                     restaurant.rating.toStringAsFixed(1),
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
                                   ),
                                 ],
                               ),
@@ -293,7 +298,9 @@ class _DetailPageState extends State<DetailPage> {
                             children: [
                               Text(
                                 'Reviews',
-                                style: Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
                               ),
                               ElevatedButton.icon(
                                 onPressed: _showAddReviewDialog,
@@ -319,41 +326,43 @@ class _DetailPageState extends State<DetailPage> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: restaurant.customerReviews.length,
                               itemBuilder: (context, index) {
-                                final review = restaurant.customerReviews[index];
+                                final review =
+                                    restaurant.customerReviews[index];
                                 return Card(
                                   margin: const EdgeInsets.only(bottom: 8),
                                   child: Padding(
                                     padding: const EdgeInsets.all(12),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               review.name,
                                               style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                  .textTheme
+                                                  .bodyLarge
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                             Text(
                                               review.date,
-                                              style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall,
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.labelSmall,
                                             ),
                                           ],
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
                                           review.review,
-                                          style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
                                         ),
                                       ],
                                     ),
@@ -372,28 +381,26 @@ class _DetailPageState extends State<DetailPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Colors.red[400],
-                  ),
+                  Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'Error loading restaurant',
+                    'Gagal Memuat Detail Restoran',
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    message,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      getUserFriendlyErrorMessage(message),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () =>
-                      context.read<RestaurantProvider>().getRestaurantDetail(
-                        widget.restaurantId,
-                      ),
+                    onPressed: () => context
+                        .read<RestaurantProvider>()
+                        .getRestaurantDetail(widget.restaurantId),
                     child: const Text('Retry'),
                   ),
                 ],

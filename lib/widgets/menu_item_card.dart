@@ -4,10 +4,7 @@ import '../models/restaurant.dart';
 class MenuItemCard extends StatelessWidget {
   final MenuItem menuItem;
 
-  const MenuItemCard({
-    super.key,
-    required this.menuItem,
-  });
+  const MenuItemCard({super.key, required this.menuItem});
 
   @override
   Widget build(BuildContext context) {

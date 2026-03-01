@@ -58,14 +58,18 @@ class DatabaseHelper {
   Future<List<Restaurant>> getFavorites() async {
     final db = await database;
     final maps = await db.query(table);
-    return maps.map((m) => Restaurant(
-          id: m['id'] as String,
-          name: m['name'] as String,
-          description: m['description'] as String,
-          pictureId: m['pictureId'] as String,
-          city: m['city'] as String,
-          rating: (m['rating'] as num).toDouble(),
-        )).toList();
+    return maps
+        .map(
+          (m) => Restaurant(
+            id: m['id'] as String,
+            name: m['name'] as String,
+            description: m['description'] as String,
+            pictureId: m['pictureId'] as String,
+            city: m['city'] as String,
+            rating: (m['rating'] as num).toDouble(),
+          ),
+        )
+        .toList();
   }
 
   Future<bool> isFavorite(String id) async {

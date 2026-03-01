@@ -6,15 +6,19 @@ import 'api_result.dart';
 class RestaurantProvider extends ChangeNotifier {
   final RestaurantService _service;
 
-  RestaurantProvider({RestaurantService? service}) : _service = service ?? RestaurantService();
+  RestaurantProvider({RestaurantService? service})
+    : _service = service ?? RestaurantService();
 
   ApiResult<RestaurantListResponse> _restaurantListResult = const ApiLoading();
-  ApiResult<RestaurantDetailResponse> _restaurantDetailResult = const ApiLoading();
+  ApiResult<RestaurantDetailResponse> _restaurantDetailResult =
+      const ApiLoading();
   ApiResult<RestaurantListResponse> _searchResult = const ApiLoading();
   ApiResult<void> _addReviewResult = const ApiLoading();
 
-  ApiResult<RestaurantListResponse> get restaurantListResult => _restaurantListResult;
-  ApiResult<RestaurantDetailResponse> get restaurantDetailResult => _restaurantDetailResult;
+  ApiResult<RestaurantListResponse> get restaurantListResult =>
+      _restaurantListResult;
+  ApiResult<RestaurantDetailResponse> get restaurantDetailResult =>
+      _restaurantDetailResult;
   ApiResult<RestaurantListResponse> get searchResult => _searchResult;
   ApiResult<void> get addReviewResult => _addReviewResult;
 
@@ -26,7 +30,9 @@ class RestaurantProvider extends ChangeNotifier {
       final response = await _service.getAllRestaurants();
       _restaurantListResult = ApiSuccess(response);
     } catch (e) {
-      _restaurantListResult = ApiError(e.toString().replaceFirst('Exception: ', ''));
+      _restaurantListResult = ApiError(
+        e.toString().replaceFirst('Exception: ', ''),
+      );
     }
     notifyListeners();
   }
@@ -39,7 +45,9 @@ class RestaurantProvider extends ChangeNotifier {
       final response = await _service.getRestaurantDetail(id);
       _restaurantDetailResult = ApiSuccess(response);
     } catch (e) {
-      _restaurantDetailResult = ApiError(e.toString().replaceFirst('Exception: ', ''));
+      _restaurantDetailResult = ApiError(
+        e.toString().replaceFirst('Exception: ', ''),
+      );
     }
     notifyListeners();
   }

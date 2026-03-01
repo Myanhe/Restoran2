@@ -42,4 +42,9 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    
+    <!-- Permissions for notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Permissions for scheduling alarms -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 </manifest>

@@ -18,8 +18,8 @@ class RestaurantListResponse {
       count: json['count'] ?? 0,
       restaurants: List<Restaurant>.from(
         (json['restaurants'] as List?)?.map(
-          (x) => Restaurant.fromJson(x as Map<String, dynamic>),
-        ) ??
+              (x) => Restaurant.fromJson(x as Map<String, dynamic>),
+            ) ??
             [],
       ),
     );
@@ -112,8 +112,8 @@ class RestaurantDetail {
       menus: Menus.fromJson(json['menus'] as Map<String, dynamic>? ?? {}),
       customerReviews: List<Review>.from(
         (json['customerReviews'] as List?)?.map(
-          (x) => Review.fromJson(x as Map<String, dynamic>),
-        ) ??
+              (x) => Review.fromJson(x as Map<String, dynamic>),
+            ) ??
             [],
       ),
     );
@@ -124,23 +124,20 @@ class Menus {
   final List<MenuItem> foods;
   final List<MenuItem> drinks;
 
-  Menus({
-    required this.foods,
-    required this.drinks,
-  });
+  Menus({required this.foods, required this.drinks});
 
   factory Menus.fromJson(Map<String, dynamic> json) {
     return Menus(
       foods: List<MenuItem>.from(
         (json['foods'] as List?)?.map(
-          (x) => MenuItem.fromJson(x as Map<String, dynamic>),
-        ) ??
+              (x) => MenuItem.fromJson(x as Map<String, dynamic>),
+            ) ??
             [],
       ),
       drinks: List<MenuItem>.from(
         (json['drinks'] as List?)?.map(
-          (x) => MenuItem.fromJson(x as Map<String, dynamic>),
-        ) ??
+              (x) => MenuItem.fromJson(x as Map<String, dynamic>),
+            ) ??
             [],
       ),
     );
@@ -157,9 +154,7 @@ class MenuItem {
   MenuItem({required this.name});
 
   factory MenuItem.fromJson(Map<String, dynamic> json) {
-    return MenuItem(
-      name: json['name'] ?? '',
-    );
+    return MenuItem(name: json['name'] ?? '');
   }
 }
 
@@ -168,11 +163,7 @@ class Review {
   final String review;
   final String date;
 
-  Review({
-    required this.name,
-    required this.review,
-    required this.date,
-  });
+  Review({required this.name, required this.review, required this.date});
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(

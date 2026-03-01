@@ -19,6 +19,21 @@ class AppTheme {
       ),
     ),
     textTheme: TextTheme(
+      displayLarge: GoogleFonts.poppins(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF1B5E20),
+      ),
+      displayMedium: GoogleFonts.poppins(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF1B5E20),
+      ),
+      displaySmall: GoogleFonts.poppins(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF1B5E20),
+      ),
       headlineLarge: GoogleFonts.poppins(
         fontSize: 28,
         fontWeight: FontWeight.bold,
@@ -26,6 +41,11 @@ class AppTheme {
       ),
       headlineMedium: GoogleFonts.poppins(
         fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF2E7D32),
+      ),
+      headlineSmall: GoogleFonts.poppins(
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: const Color(0xFF2E7D32),
       ),
@@ -37,6 +57,21 @@ class AppTheme {
       bodyMedium: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.normal,
+        color: const Color(0xFF616161),
+      ),
+      bodySmall: GoogleFonts.poppins(
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: const Color(0xFF757575),
+      ),
+      labelLarge: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: const Color(0xFF424242),
+      ),
+      labelMedium: GoogleFonts.poppins(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
         color: const Color(0xFF616161),
       ),
       labelSmall: GoogleFonts.poppins(
@@ -59,9 +94,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFFF5F5F5),
-      hintStyle: GoogleFonts.poppins(
-        color: const Color(0xFF9E9E9E),
-      ),
+      hintStyle: GoogleFonts.poppins(color: const Color(0xFF9E9E9E)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
@@ -94,6 +127,21 @@ class AppTheme {
       ),
     ),
     textTheme: TextTheme(
+      displayLarge: GoogleFonts.poppins(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF81C784),
+      ),
+      displayMedium: GoogleFonts.poppins(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF81C784),
+      ),
+      displaySmall: GoogleFonts.poppins(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF81C784),
+      ),
       headlineLarge: GoogleFonts.poppins(
         fontSize: 28,
         fontWeight: FontWeight.bold,
@@ -101,6 +149,11 @@ class AppTheme {
       ),
       headlineMedium: GoogleFonts.poppins(
         fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: const Color(0xFF81C784),
+      ),
+      headlineSmall: GoogleFonts.poppins(
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: const Color(0xFF81C784),
       ),
@@ -112,6 +165,21 @@ class AppTheme {
       bodyMedium: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.normal,
+        color: const Color(0xFFB0BEC5),
+      ),
+      bodySmall: GoogleFonts.poppins(
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: const Color(0xFF90A4AE),
+      ),
+      labelLarge: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: const Color(0xFFE0E0E0),
+      ),
+      labelMedium: GoogleFonts.poppins(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
         color: const Color(0xFFB0BEC5),
       ),
       labelSmall: GoogleFonts.poppins(
@@ -134,9 +202,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: const Color(0xFF2C2C2C),
-      hintStyle: GoogleFonts.poppins(
-        color: const Color(0xFF757575),
-      ),
+      hintStyle: GoogleFonts.poppins(color: const Color(0xFF757575)),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(color: Color(0xFF424242)),

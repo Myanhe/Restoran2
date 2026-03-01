@@ -73,8 +73,10 @@ class _FavoritePageState extends State<FavoritePage> {
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      Provider.of<RestaurantProvider>(context, listen: false)
-                          .getRestaurantImageUrl(r.pictureId),
+                      Provider.of<RestaurantProvider>(
+                        context,
+                        listen: false,
+                      ).getRestaurantImageUrl(r.pictureId),
                       width: 64,
                       height: 64,
                       fit: BoxFit.cover,
@@ -88,7 +90,10 @@ class _FavoritePageState extends State<FavoritePage> {
                       },
                     ),
                   ),
-                  title: Text(r.name),
+                  title: Text(
+                    r.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                   subtitle: Row(
                     children: [
                       Icon(
@@ -98,7 +103,10 @@ class _FavoritePageState extends State<FavoritePage> {
                       ),
                       const SizedBox(width: 4),
                       Expanded(
-                        child: Text('${r.city} • ⭐ ${r.rating.toStringAsFixed(1)}'),
+                        child: Text(
+                          '${r.city} • ⭐ ${r.rating.toStringAsFixed(1)}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ],
                   ),
