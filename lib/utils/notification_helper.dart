@@ -51,21 +51,12 @@ class NotificationHelper {
     }
   }
 
+  // ⚠️  TEST BRANCH: fires 10 seconds after toggle instead of waiting for 11 AM
   Future<void> scheduleDailyAt11() async {
     try {
       final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-      tz.TZDateTime scheduledDate = tz.TZDateTime(
-        tz.local,
-        now.year,
-        now.month,
-        now.day,
-        11,
-        0,
-      );
-
-      if (scheduledDate.isBefore(now)) {
-        scheduledDate = scheduledDate.add(const Duration(days: 1));
-      }
+      // TODO(test): replace with real 11 AM schedule before merging to main
+      final tz.TZDateTime scheduledDate = now.add(const Duration(seconds: 10));
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
         0,
@@ -95,6 +86,24 @@ class NotificationHelper {
       // Error handling silently - notification scheduling issue
       // Errors can occur due to timezone or platform-specific issues
     }
+  }
+
+  // TEST HELPER: shows an immediate notification to verify the channel works
+  Future<void> showTestNotificationNow() async {
+    await flutterLocalNotificationsPlugin.show(
+      99,
+      '🔔 Test Notifikasi',
+      'Notifikasi berhasil tampil! Fitur reminder berjalan normal.',
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminder_channel',
+          'Daily Reminder',
+          channelDescription: 'Daily lunch reminder at 11 AM',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+      ),
+    );
   }
 
   Future<void> cancelDaily() async {
